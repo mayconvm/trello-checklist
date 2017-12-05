@@ -1,0 +1,34 @@
+<html>
+	<head>
+		<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+		<script src="https://api.trello.com/1/client.js?key=1fe43f186303067b9e005003b4525705"></script>	
+
+		<script src="main.js"></script>
+		<style type="text/css">
+			.actionL {
+				float: left;
+				margin-right: 10px;
+			}
+
+			.checklists {
+				height: 150px;
+			}
+		</style>
+	</head>
+	<body onload="">
+		<button class="actionL" onclick="init()">Login</button>
+		<button class="actionL" onclick="logout()">Logout</button> <br><br>
+	
+		
+		<select name="" id="listChecklist_sunday" multiple="true" class="checklists"> </select>
+		<select name="" id="listChecklist_monday" multiple="true" class="checklists"> </select>
+		<select name="" id="listChecklist_tuesday" multiple="true" class="checklists"> </select>
+		<select name="" id="listChecklist_wendsday" multiple="true" class="checklists"> </select>
+		<select name="" id="listChecklist_thursday" multiple="true" class="checklists"> </select>
+		<select name="" id="listChecklist_friday" multiple="true" class="checklists"> </select>
+		<select name="" id="listChecklist_saturday" multiple="true" class="checklists"> </select>
+
+		<br> <br>
+		<button onclick="initCreate()">Create Cards all day</button> <br>
+	</body>
+</html>
