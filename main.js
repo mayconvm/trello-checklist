@@ -40,20 +40,14 @@ function init()
 			return console.error('Não foi possível logar.');
 		}
 
-
 		// lista eles em um combobox[multiline]
 		let inputLists = document.querySelectorAll(".checklists");
-		let opt = [];
 
 		for (let i in ARRAY_CHECKLIST) {
-			opt.push(new Option(i, ARRAY_CHECKLIST[i]));
+			for (item of inputLists) {
+				item.options.add(new Option(i, ARRAY_CHECKLIST[i]));
+			}
 		}
-
-		inputLists.forEach((item) => {
-			item.options = opt;
-			console.log("-> id", item.id);
-		})
-
 	});
 }
 

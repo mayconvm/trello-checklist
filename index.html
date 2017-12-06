@@ -13,6 +13,15 @@
 			.checklists {
 				height: 150px;
 			}
+
+			.selects {
+				float: left;
+				margin-right: 10px;
+			}
+
+			.d-block {
+				display: block;
+			}
 		</style>
 	</head>
 	<body onload="">
@@ -20,13 +29,34 @@
 		<button class="actionL" onclick="logout()">Logout</button> <br><br>
 	
 		
-		<select name="" id="listChecklist_sunday" multiple="true" class="checklists"> </select>
-		<select name="" id="listChecklist_monday" multiple="true" class="checklists"> </select>
-		<select name="" id="listChecklist_tuesday" multiple="true" class="checklists"> </select>
-		<select name="" id="listChecklist_wendsday" multiple="true" class="checklists"> </select>
-		<select name="" id="listChecklist_thursday" multiple="true" class="checklists"> </select>
-		<select name="" id="listChecklist_friday" multiple="true" class="checklists"> </select>
-		<select name="" id="listChecklist_saturday" multiple="true" class="checklists"> </select>
+		<div class="selects">
+			<label>Sunday</label> <br>
+			<select name="" id="listChecklist_sunday" multiple="true" class="checklists"> </select>
+		</div>
+		<div class="selects">
+			<label>Monday</label> <br>
+			<select name="" id="listChecklist_monday" multiple="true" class="checklists"> </select>
+		</div>
+		<div class="selects">
+			<label>Tuesday</label> <br>
+			<select name="" id="listChecklist_tuesday" multiple="true" class="checklists"> </select>
+		</div>
+		<div class="selects">
+			<label>Wednesday</label> <br>
+			<select name="" id="listChecklist_wednesday" multiple="true" class="checklists"> </select>
+		</div>
+		<div class="selects">
+			<label>Thursday</label> <br>
+			<select name="" id="listChecklist_thursday" multiple="true" class="checklists"> </select>
+		</div>
+		<div class="selects">
+			<label>Friday</label> <br>
+			<select name="" id="listChecklist_friday" multiple="true" class="checklists"> </select>
+		</div>
+		<div class="selects d-block">
+			<label>Saturday</label> <br>
+			<select name="" id="listChecklist_saturday" multiple="true" class="checklists"> </select>
+		</div>
 
 		<br> <br>
 		<button onclick="initCreate()">Create Cards all day</button> <br>
