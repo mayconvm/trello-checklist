@@ -90,10 +90,15 @@ function createListMes(callback) {
 		"pos": "top"
 	}
 
-	Trello.post('/list', objNewlist, creationSuccess, error)
+	console.log("--->Card: ", objNewlist);
+	callback(true, {id: "5a288a401956e3f725934fe2"});
+	// Trello.post('/list', objNewlist, creationSuccess, error)
 }
 
 function adicionaChecklist(data, checklist, callback) {
+
+	console.log(data, checklist);
+
 	var error = function(errorMsg) {
 	  console.log(errorMsg);
 	  callback(false);
@@ -109,7 +114,8 @@ function adicionaChecklist(data, checklist, callback) {
 		"idChecklistSource": ARRAY_CHECKLIST[checklist],
 	}
 
-	Trello.post('/cards/' + data.id + '/checklists', newChecklist, creationSuccess, error);
+	console.log("-->checklist: ", newChecklist);
+	// Trello.post('/cards/' + data.id + '/checklists', newChecklist, creationSuccess, error);
 }
 
 function createAllDayCards(status, data) {
@@ -140,26 +146,33 @@ function createAllDayCards(status, data) {
 		};
 
 		let creationSuccess = function(dataCard) {
-		  console.log('Card created successfully. Data returned:' + JSON.stringify(dataCard));
-
+		  // console.log('Card created successfully. Data returned:' + JSON.stringify(dataCard));
+		  let listToday = getChecklistsDay(NOW.getDay());
+		  
 		  // adiciona os checklists
-		  adicionaChecklist(dataCard, 'Padrao', callback);
-
-		  // sexta feira
-		  if (NOW.getDay() == 5) {
-		  	adicionaChecklist(dataCard, 'Sexta', function() {});
+		  for (list of listToday) {
+		  	if (list.selected) {
+		  		adicionaChecklist(dataCard, list.text, callback);
+		  	}
 		  }
 
-		  // caso seja o quinta dia útil
-		  if (NOW.getDate() == 7) {
-		  	adicionaChecklist(dataCard, 'ContasPagar', function() {});
-		  }
+		  // adicionaChecklist(dataCard, 'Padrao', callback);
+
+		  // // sexta feira
+		  // if (NOW.getDay() == 5) {
+		  // 	adicionaChecklist(dataCard, 'Sexta', function() {});
+		  // }
+
+		  // // caso seja o quinta dia útil
+		  // if (NOW.getDate() == 7) {
+		  // 	adicionaChecklist(dataCard, 'ContasPagar', function() {});
+		  // }
 
 		  // caso seja o primeiro dia da semana
-		  if (NOW.getDay() == 1) {
-		  	adicionaChecklist(dataCard, 'UptimeAudio', function() {});
-		  	adicionaChecklist(dataCard, 'UptimeExercicio', function() {});
-		  }
+		  // if (NOW.getDay() == 1) {
+		  // 	adicionaChecklist(dataCard, 'UptimeAudio', function() {});
+		  // 	adicionaChecklist(dataCard, 'UptimeExercicio', function() {});
+		  // }
 		};
 
 		let newCard = {
@@ -170,10 +183,49 @@ function createAllDayCards(status, data) {
 		  pos: 'bottom',
 		  due: NOW
 		};
-		Trello.post('/cards/', newCard, creationSuccess, error);
+
+		console.log("-->Card: ", newCard);
+		creationSuccess({"name": nameCard});
+		callback();
+
+		// Trello.post('/cards/', newCard, creationSuccess, error);
 	}
 }
 
 function initCreate() {
 	createListMes(createAllDayCards);
+}
+
+function getChecklistsDay(day) {
+	let select;
+	let list;
+
+	switch (day) {
+		case 0:
+			select = document.getElementById('listChecklist_sunday');
+			break;
+		case 1:
+			select = document.getElementById('listChecklist_monday');
+			break;
+		case 2:
+			select = document.getElementById('listChecklist_tuesday');
+			break;
+		case 3:
+			select = document.getElementById('listChecklist_wednesday');
+			break;
+		case 4:
+			select = document.getElementById('listChecklist_thursday');
+			break;
+		case 5:
+			select = document.getElementById('listChecklist_friday');
+			break;
+		case 6:
+			select = document.getElementById('listChecklist_saturday');
+			break;
+		default:
+			throw new Error("Não foi possível determinar o dia.");
+	}
+
+
+	return select.options;
 }
