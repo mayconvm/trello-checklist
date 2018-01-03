@@ -45,7 +45,24 @@ function init()
 
 		for (let i in ARRAY_CHECKLIST) {
 			for (item of inputLists) {
-				item.options.add(new Option(i, ARRAY_CHECKLIST[i]));
+				let option = new Option(i, ARRAY_CHECKLIST[i]);
+				item.options.add(option);
+
+				// force selected itens
+				if (ARRAY_CHECKLIST[i] === ARRAY_CHECKLIST['Padrao']) {
+					option.selected = true;
+				}
+
+				// force selected item friday
+				if (item.id.indexOf("friday") != -1 && ARRAY_CHECKLIST[i] === ARRAY_CHECKLIST['Sexta']) {
+					option.selected = true;
+				}
+
+				// force selected item second day
+				if (item.id.indexOf("two") != -1 && ARRAY_CHECKLIST[i] === ARRAY_CHECKLIST['ContasPagar']) {
+					option.selected = true;
+				}
+
 			}
 		}
 	});
@@ -91,8 +108,8 @@ function createListMes(callback) {
 	}
 
 	console.log("--->Card: ", objNewlist);
-	callback(true, {id: "5a288a401956e3f725934fe2"});
-	// Trello.post('/list', objNewlist, creationSuccess, error)
+	// callback(true, {id: "5a288a401956e3f725934fe2"});
+	Trello.post('/list', objNewlist, creationSuccess, error)
 }
 
 function adicionaChecklist(data, checklist, callback) {
@@ -115,7 +132,7 @@ function adicionaChecklist(data, checklist, callback) {
 	}
 
 	console.log("-->checklist: ", newChecklist);
-	// Trello.post('/cards/' + data.id + '/checklists', newChecklist, creationSuccess, error);
+	Trello.post('/cards/' + data.id + '/checklists', newChecklist, creationSuccess, error);
 }
 
 function createAllDayCards(status, data) {
@@ -133,6 +150,8 @@ function createAllDayCards(status, data) {
 		if (NOW.getMonth() != MONTH_NOW) {
 			return;
 		}
+
+		// é preciso esperar a request voltar, para que os dias sejam criados corretos
 
 		createAllDayCards (true, data);
 	});
@@ -185,10 +204,10 @@ function createAllDayCards(status, data) {
 		};
 
 		console.log("-->Card: ", newCard);
-		creationSuccess({"name": nameCard});
+		// creationSuccess({"name": nameCard});
 		callback();
 
-		// Trello.post('/cards/', newCard, creationSuccess, error);
+		Trello.post('/cards/', newCard, creationSuccess, error);
 	}
 }
 
