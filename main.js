@@ -182,10 +182,18 @@ function createAllDayCards(status, data) {
 		  // 	adicionaChecklist(dataCard, 'Sexta', function() {});
 		  // }
 
-		  // // caso seja o quinta dia útil
-		  // if (NOW.getDate() == 7) {
-		  // 	adicionaChecklist(dataCard, 'ContasPagar', function() {});
-		  // }
+		  // // caso seja o segundo dia útil
+		  if (NOW.getDate() == 3) {
+		  	let _listToday = getChecklistsDay("two_day_valid");
+		  
+			  // adiciona os checklists
+			  for (list of _listToday) {
+			  	if (list.selected) {
+		  			adicionaChecklist(dataCard, 'ContasPagar', function() {});
+			  	}
+			  }
+			  
+		  }
 
 		  // caso seja o primeiro dia da semana
 		  // if (NOW.getDay() == 1) {
@@ -240,6 +248,9 @@ function getChecklistsDay(day) {
 			break;
 		case 6:
 			select = document.getElementById('listChecklist_saturday');
+			break;
+		case 'two_day_valid':
+			select = document.getElementById('listChecklist_two_util');
 			break;
 		default:
 			throw new Error("Não foi possível determinar o dia.");
