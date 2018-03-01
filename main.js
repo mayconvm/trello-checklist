@@ -213,7 +213,7 @@ function createAllDayCards(status, data) {
 
 		console.log("-->Card: ", newCard);
 		// creationSuccess({"name": nameCard});
-		callback();
+		// callback();
 
 		Trello.post('/cards/', newCard, creationSuccess, error);
 	}
