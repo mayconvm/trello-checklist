@@ -24,7 +24,7 @@ class Card
         return this.dueDate;
     }
 
-    setCheclist (checklist) {
+    setChecklist (checklist) {
         return this.checklists.push(checklist);
     }
 
@@ -32,7 +32,7 @@ class Card
         return this.checklists;
     }
 
-    getDate() {
+    getData() {
         return {
             name: this.getName(), 
             desc: this.getDescription(),

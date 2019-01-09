@@ -33,6 +33,42 @@ const trelloApi = new TrelloApi();
 
 let listRoot;
 
+function getChecklistsDay(day) {
+    let select;
+    let list;
+
+    switch (day) {
+        case 0:
+            select = document.getElementById('listChecklist_sunday');
+            break;
+        case 1:
+            select = document.getElementById('listChecklist_monday');
+            break;
+        case 2:
+            select = document.getElementById('listChecklist_tuesday');
+            break;
+        case 3:
+            select = document.getElementById('listChecklist_wednesday');
+            break;
+        case 4:
+            select = document.getElementById('listChecklist_thursday');
+            break;
+        case 5:
+            select = document.getElementById('listChecklist_friday');
+            break;
+        case 6:
+            select = document.getElementById('listChecklist_saturday');
+            break;
+        case 'two_day_valid':
+            select = document.getElementById('listChecklist_two_util');
+            break;
+        default:
+            throw new Error("Não foi possível determinar o dia.");
+    }
+
+
+    return select.options;
+}
 
 /**
  * Login and fit list checklist
@@ -89,22 +125,63 @@ function startMakeChecklists() {
 
     listRoot = new List(MES[NOW.getMonth()], ID_BOARD);
 
+    // criar board
+    trelloApi.apiPOST('/list', listRoot.getData())
+    .then((result) => {
+        // console.log(listRoot.getData(), result);
+        listRoot.setIdBoard(result.id);
+        createCards(listRoot);
+    })
+    .catch((error) => {
+        throw error;
+    })
+    .finally(() => {
+        // criar cards e adicionar o checklist
+        console.log("-->", listRoot);
+    })
+
+}
+
+function createCards(list){
     while (true) {
         let nameCard = NOW.getDate() + "-" + (NOW.getMonth() + 1);
-
-        // Cria a lista
-        const cart = new Card(nameCard);
-
-        // cria
-
-
         const day = NOW.getDay();
-        const date = NOW.getDate();
+        const dayWeek = NOW.getDate();
+
+        // Cria o card
+        const card = new Card(list.getIdBoard(), nameCard);
+        
+        // adiciona os checklists
+        createCheckList(card, day, dayWeek);
+
+        // adiciona o card
+        listRoot.setCard(card);
+
         NOW.setDate(NOW.getDate() + 1);
 
         if (NOW.getMonth() != MONTH_NOW) {
-            resolve();
             break;
         }
     }
+}
+
+function createCheckList(card, day, dayWeek) {
+    const listToday = getChecklistsDay(day);
+
+    for (item of listToday) {
+        if (item.selected) {
+            card.setChecklist(new Checklist(item.text))
+        }
+    }
+
+    if (dayWeek == 3) {
+        const _listToday = getChecklistsDay("two_day_valid");
+      
+          // adiciona os checklists
+          for (item of _listToday) {
+            if (item.selected) {
+                card.setChecklist(new Checklist('ContasPagar'))
+            }
+          }
+      }
 }

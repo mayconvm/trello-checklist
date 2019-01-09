@@ -15,3 +15,4 @@
 * Selecionar o card		- OK
 * Adicionar mensagens na tela	- OK
 * Buscar todas os checklist disponíveis		- OK
+* Criar lista de cards em ordem de dias

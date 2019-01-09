@@ -8,7 +8,7 @@ class Checklist
         return this.description;
     }
 
-    getDate() {
+    getData() {
         return {
             
         }

@@ -10,19 +10,23 @@ class List
         return this.name;
     }
 
+    setIdBoard(value) {
+        this.idBoard = value;
+    }
+
     getIdBoard() {
-        return this.name;
+        return this.idBoard;
     }
 
     setCard(card) {
-        this.card.push($card);
+        this.card.push(card);
     }
 
     getCard() {
         return this.card;
     }
 
-    getDate() {
+    getData() {
         return {
             "name": this.getName(),
             "idBoard": this.getIdBoard(),
