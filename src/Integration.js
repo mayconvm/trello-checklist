@@ -131,6 +131,14 @@ function startMakeChecklists() {
         // console.log(listRoot.getData(), result);
         listRoot.setIdBoard(result.id);
         createCards(listRoot);
+
+        return listRoot;
+    })
+    .then((listRoot) => {
+        return trelloApi.pushList('/cards', listRoot.getCards());
+    })
+    .then((listRoot) => {
+        // generateCheckList(listRoot);
     })
     .catch((error) => {
         throw error;
@@ -139,10 +147,12 @@ function startMakeChecklists() {
         // criar cards e adicionar o checklist
         console.log("-->", listRoot);
     })
-
 }
 
-function createCards(list){
+function createCards(list) {
+    const NOW = new Date();
+    const MONTH_NOW = NOW.getMonth();
+
     while (true) {
         let nameCard = NOW.getDate() + "-" + (NOW.getMonth() + 1);
         const day = NOW.getDay();
@@ -151,11 +161,8 @@ function createCards(list){
         // Cria o card
         const card = new Card(list.getIdBoard(), nameCard);
         
-        // adiciona os checklists
-        createCheckList(card, day, dayWeek);
-
         // adiciona o card
-        listRoot.setCard(card);
+        list.setCard(card);
 
         NOW.setDate(NOW.getDate() + 1);
 
@@ -163,6 +170,32 @@ function createCards(list){
             break;
         }
     }
+
+    return list;
+}
+
+function generateCheckList(list) {
+    const NOW = new Date();
+    const MONTH_NOW = NOW.getMonth();
+
+    const listCards = list.getCards();
+
+    for (const card of listCards) {
+        let nameCard = NOW.getDate() + "-" + (NOW.getMonth() + 1);
+        const day = NOW.getDay();
+        const dayWeek = NOW.getDate();
+
+        // adiciona os checklists
+        createCheckList(card, day, dayWeek);
+
+        NOW.setDate(NOW.getDate() + 1);
+
+        if (NOW.getMonth() != MONTH_NOW) {
+            break;
+        }
+    }
+
+    return list;
 }
 
 function createCheckList(card, day, dayWeek) {
