@@ -32,6 +32,22 @@ class Card
         return this.checklists;
     }
 
+    getId() {
+        return this.id;
+    }
+
+    setId(value) {
+        this.id = value;
+    }
+    
+    thenCallback(result) {
+        this.setId(result.id);
+    }
+
+    catchCallback(error) {
+        throw error;
+    }
+
     getData() {
         return {
             name: this.getName(), 
