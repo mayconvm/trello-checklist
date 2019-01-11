@@ -39,4 +39,34 @@ class TrelloApi
 			Trello.post(url, data, resolve, reject);
 		});
 	}
+
+	pushList(url, listRoot) {
+		const funcRecusive = (list) => {
+			const item = list.splice(0, 1)[0];
+
+			if (item === undefined) {
+				return Promise.resolve();
+			}
+
+			return new Promise((resolve, reject) => {
+				const res = (r) => {
+					item.thenCallback? item.thenCallback(r) : null;
+
+					funcRecusive(list)
+				}
+
+				const rej = (r) => {
+					item.crachCallback? item.crachCallback(r) : null;
+
+					funcRecusive(list)
+				}
+
+				this.apiPOST(url, item.getData())
+				.then(res)
+				.catch(rej);
+			});
+		}
+
+		return funcRecusive(listRoot)
+	}
 }
