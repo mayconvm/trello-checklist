@@ -22,7 +22,7 @@ class List
         this.card.push(card);
     }
 
-    getCard() {
+    getCards() {
         return this.card;
     }
 
