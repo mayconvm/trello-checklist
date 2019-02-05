@@ -4,6 +4,8 @@ class TrelloApi
 	 	if (Trello === undefined) {
 	 		throw new Error("SDK Trello not found.");
 	 	}
+
+	 	this.resultPromises = []
 	}
 
 	login() {
@@ -41,32 +43,35 @@ class TrelloApi
 	}
 
 	pushList(url, listRoot) {
-		const funcRecusive = (list) => {
-			const item = list.splice(0, 1)[0];
+		let cont = 1;
+		const that = this;
+		
+		// a gambiarra das gambiarras para criar uma lista ordenada
+		for (item of listRoot) {
+			this.resultPromises.push(
+				function (item, cont) {
+					return new Promise((resolve, reject) => {
+						const res = (r) => {
+							resolve(item.thenCallback? item.thenCallback(r) : null);
+						}
 
-			if (item === undefined) {
-				return Promise.resolve();
-			}
+						const rej = (r) => {
+							console.error(r);
+							reject(item.crachCallback? item.crachCallback(r) : null);
+						}
 
-			return new Promise((resolve, reject) => {
-				const res = (r) => {
-					item.thenCallback? item.thenCallback(r) : null;
-
-					funcRecusive(list)
-				}
-
-				const rej = (r) => {
-					item.crachCallback? item.crachCallback(r) : null;
-
-					funcRecusive(list)
-				}
-
-				this.apiPOST(url, item.getData())
-				.then(res)
-				.catch(rej);
-			});
+						setTimeout(
+							() => that.apiPOST(url, item.getData())
+								.then(res)
+								.catch(rej)
+						, cont);
+					});
+				} (item, (cont * 2) * 100)
+			);
+			
+			cont++;
 		}
 
-		return funcRecusive(listRoot)
+		return Promise.all(this.resultPromises);
 	}
 }

@@ -135,10 +135,25 @@ function startMakeChecklists() {
         return listRoot;
     })
     .then((listRoot) => {
-        return trelloApi.pushList('/cards', listRoot.getCards());
-    })
-    .then((listRoot) => {
-        // generateCheckList(listRoot);
+        const cards = listRoot.getCards();
+
+        trelloApi.pushList('/cards', cards)
+        .then((listRoot) => {
+
+            const result = generateCheckList(cards);
+            const listCards = result.getList()
+            const preparedList = result.getPreparedList();
+
+            let constResultPromise = [];
+
+            for (item of preparedList) {
+                let url = '/cards/' + item[0] + '/checklists'
+                let data = item[1]
+                constResultPromise.push(trelloApi.apiPOST(url, data));
+            }
+            
+            return Promise.all(constResultPromise);
+        });
     })
     .catch((error) => {
         throw error;
@@ -174,11 +189,9 @@ function createCards(list) {
     return list;
 }
 
-function generateCheckList(list) {
+function generateCheckList(listCards) {
     const NOW = new Date();
     const MONTH_NOW = NOW.getMonth();
-
-    const listCards = list.getCards();
 
     for (const card of listCards) {
         let nameCard = NOW.getDate() + "-" + (NOW.getMonth() + 1);
@@ -186,24 +199,27 @@ function generateCheckList(list) {
         const dayWeek = NOW.getDate();
 
         // adiciona os checklists
-        createCheckList(card, day, dayWeek);
+        configCheckList(card, day, dayWeek);
 
         NOW.setDate(NOW.getDate() + 1);
+
 
         if (NOW.getMonth() != MONTH_NOW) {
             break;
         }
     }
+    
+    const preparedList = preparedListChecklist(listCards);
 
-    return list;
+    return new ResultList(listCards, preparedList);
 }
 
-function createCheckList(card, day, dayWeek) {
+function configCheckList(card, day, dayWeek) {
     const listToday = getChecklistsDay(day);
 
     for (item of listToday) {
         if (item.selected) {
-            card.setChecklist(new Checklist(item.text))
+            card.setChecklist(new Checklist(item.text, item.value))
         }
     }
 
@@ -217,4 +233,20 @@ function createCheckList(card, day, dayWeek) {
             }
           }
       }
+}
+
+function preparedListChecklist(listCards) {
+    const preparedList = [];
+
+    for (const card of listCards) {
+        const checklists = card.getChecklists();
+        for (checklist of checklists) {
+            preparedList.push([
+                card.getId(),
+                checklist.getData()
+            ]);
+        }
+    }
+
+    return preparedList;
 }
